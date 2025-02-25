@@ -5,6 +5,7 @@
 
 import DefaultLayout from "@/layouts/default.vue"
 import Candidatos from "@/pages/candidatos.vue"
+import Concursos from "@/pages/concursos.vue"
 
 const routes = [
     {
@@ -21,7 +22,7 @@ const routes = [
           {
             name: "concursos",
             path: "concursos",
-            component: Candidatos,
+            component: Concursos,
             meta: { tabTitle: "Concursos" }
           }
         ]
