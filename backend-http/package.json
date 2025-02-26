@@ -1,0 +1,17 @@
+{
+  "name": "backend-http",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "dev": "./main",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lucas Vieira da Silva",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.3"
+  },
+  "type": "module"
+}
