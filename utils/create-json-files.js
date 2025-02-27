@@ -13,6 +13,7 @@ const csvlikeToArray = async (txtFilename, map) => {
     {
         txtInput: "../concursos.txt",
         jsonOutput: "../frontend-web/src/services/concursos.json",
+        jsonOutput: "../backend-http/utils/concursos.json",
         map: (row) => {
             const regex = /([A-Z]+)\ (\d{1,2}\/\d{4})\ (\d+)\ \[(.+)\]/
             let match = row.match(regex)
@@ -27,7 +28,7 @@ const csvlikeToArray = async (txtFilename, map) => {
     },
     {
         txtInput: "../candidatos.txt",
-        jsonOutput: "../frontend-web/src/services/candidatos.json",
+        jsonOutput: "../backend-http/utils/candidatos.json",
         map: (row) => {
             const regex = /([.\D]+)\ (\d{2}\/\d{2}\/\d{4})\ (\d{3}\.\d{3}\.\d{3}\-\d{2})\ \[(.+)\]/
             let match = row.match(regex)
@@ -40,10 +41,7 @@ const csvlikeToArray = async (txtFilename, map) => {
             return candidato
         }
     }
-].forEach(({txtInput, jsonOutput, map}) => {
-    // forEach nao trata funcoes async apropriadamente, por isso o .then.
-    // uma alternativa seria usar map + Promise.all
-    csvlikeToArray(txtInput, map).then((data) => {
-        writeFile(jsonOutput, JSON.stringify(data))
-    })
+].forEach(async ({txtInput, jsonOutput, map}) => {
+    const data = await csvlikeToArray(txtInput, map)
+    writeFile(jsonOutput, JSON.stringify(data))
 })

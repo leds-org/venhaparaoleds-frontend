@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export PGHOST=localhost
+export PGPORT=5432
+export PGUSER=postgres
+export PGPASSWORD=5040
+
+node main.js
