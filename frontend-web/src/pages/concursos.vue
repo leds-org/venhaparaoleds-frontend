@@ -7,8 +7,8 @@
         v-maska.mask="'###.###.###-##'"
         label="Pesquisar concurso por CPF"
         prepend-inner-icon="mdi-magnify"
-        :clearable="!bloqueado" :disabled="bloqueado"
-        :loading="bloqueado"
+        :clearable="!app.loading" :disabled="app.loading"
+        :loading="app.loading"
       ></v-text-field>
     </v-col>
     <v-col>
@@ -28,7 +28,7 @@
         :headers="headers"
         :items="concursos"
         height="calc(100vh - 264px)"
-        :loading="bloqueado"
+        :loading="app.loading"
       >
         <template v-slot:item.profissoes="{ item }">
           <v-chip v-for="profissao in item.profissoes">
@@ -52,6 +52,7 @@
 import { listarConcursos, concursoPorCpf } from "@/services/concursos"
 import { vMaska } from "maska/vue"
 import debounce from "lodash.debounce"
+import { useAppStore } from "@/stores/app"
 
 
 
@@ -61,36 +62,30 @@ const buscarCandidato = (codigo) => {
   router.push({ name: "candidatos", query: { codigo } })
 }
 
+const app = useAppStore()
+
 const profissoesCandidato = ref([])
 const concursos = ref([])
 
-const bloqueado = ref(false)
-
 const cpf = ref('')
-const _updateCpf = (newValue) => {
+const _updateCpf = async (newValue) => {
   cpf.value = newValue
   if (newValue === undefined || newValue === null || newValue === '') {
-    bloqueado.value = true
-    listarConcursos().then((response) => {
-      concursos.value = response
-      profissoesCandidato.value = []
-      bloqueado.value = false
-    })
+    const response = await listarConcursos()
+    concursos.value = response
+    profissoesCandidato.value = []
     return
   }
   if (newValue.length === 14) {
-    bloqueado.value = true
-    concursoPorCpf(newValue).then((response) => {
-      concursos.value = response.concursos
-      profissoesCandidato.value = response.profissoes
-      bloqueado.value = false
-    })
+    const response = await concursoPorCpf(newValue)
+    concursos.value = response.concursos
+    profissoesCandidato.value = response.profissoesCandidato
   }
 }
 const updateCpf = debounce(_updateCpf, 500)
 
 const headers = [
-  { title: "Órgão", value: "orgao" },
+  { title: "Órgão", value: "nome" },
   { title: "Edital", value: "edital" },
   { title: "Código", value: "codigo" },
   { title: "Profissões", value: "profissoes" }

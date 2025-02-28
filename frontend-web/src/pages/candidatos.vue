@@ -7,8 +7,8 @@
         v-maska.mask="'###########'"
         label="Pesquisar candidato por código de concurso"
         prepend-inner-icon="mdi-magnify"
-        :clearable="!bloqueado" :disabled="bloqueado"
-        :loading="bloqueado"
+        :clearable="!app.loading" :disabled="app.loading"
+        :loading="app.loading"
       ></v-text-field>
     </v-col>
     <v-col>
@@ -28,7 +28,7 @@
         :headers="headers"
         :items="candidatos"
         height="calc(100vh - 264px)"
-        :loading="bloqueado"
+        :loading="app.loading"
       >
         <template v-slot:item.profissoes="{ item }">
           <v-chip v-for="profissao in item.profissoes">
@@ -52,6 +52,7 @@
 import { listarCandidatos, candidatoPorCodigo } from "@/services/candidatos"
 import { vMaska } from "maska/vue"
 import debounce from "lodash.debounce"
+import { useAppStore } from "@/stores/app"
 
 
 
@@ -61,38 +62,34 @@ const buscarConcurso = (cpf) => {
   router.push({ name: "concursos", query: { cpf } })
 }
 
+const app = useAppStore()
+
 const profissoesConcurso = ref([])
 
 const candidatos = ref([])
 
-const bloqueado = ref(false)
 
 const codigo = ref('')
-const _updateCodigo = (newValue) => {
+const _updateCodigo = async (newValue) => {
   codigo.value = newValue
   if (newValue === undefined || newValue === null || newValue === '') {
-    bloqueado.value = true
-    listarCandidatos().then((response) => {
-      candidatos.value = response
-      profissoesConcurso.value = []
-      bloqueado.value = false
-    })
+    const response = await listarCandidatos()
+    candidatos.value = response
+    profissoesConcurso.value = []
+
     return
   }
   if (newValue.length === 11) {
-    bloqueado.value = true
-    candidatoPorCodigo(newValue).then((response) => {
-      candidatos.value = response.candidatos
-      profissoesConcurso.value = response.profissoes
-      bloqueado.value = false
-    })
+    const response = await candidatoPorCodigo(newValue)
+    candidatos.value = response.candidatos
+    profissoesConcurso.value = response.profissoesConcurso
   }
 }
 const updateCodigo = debounce(_updateCodigo, 500)
 
 const headers = [
   { title: "Nome", value: "nome" },
-  { title: "Data de Nascimento", value: "dataNascimento" },
+  { title: "Data de Nascimento", value: "nascimento" },
   { title: "CPF", value: "cpf" },
   { title: "Profissões", value: "profissoes" }
 ]

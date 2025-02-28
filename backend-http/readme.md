@@ -21,7 +21,7 @@ exemplos de requisicoes com curl
 # listar todos os candidatos
 curl localhost:8080/candidato
 # listar candidatos por profissoes do concurso com determinado codigo
-curl -X POST -H "Content-Type: application/json" -d '{"codigo": "61828450843"}' localhost:8080/concurso
+curl -X POST -H "Content-Type: application/json" -d '{"codigo": "61828450843"}' localhost:8080/candidato
 
 # listar todos os concursos
 curl localhost:8080/concurso

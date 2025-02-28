@@ -43,21 +43,7 @@ export const listCandidatos = async () => {
 }
 
 export const getCandidatosByCodigo = async (codigo) => {
-    let client = new Client()
-    await client.connect()
-
-    const concursoQueryRes = await client.query(
-        "SELECT c.id FROM concursos c WHERE c.codigo = $1",
-        [codigo]
-    )
-    await client.end()
-    const concursoExists = concursoQueryRes.rowCount > 0
-    if (!concursoExists) {
-        return []
-    }
-    const concursoId = concursoQueryRes.rows[0].id
-
-    client = new Client()
+    const client = new Client()
     await client.connect()
 
     const queryRes = await client.query(
@@ -66,11 +52,9 @@ export const getCandidatosByCodigo = async (codigo) => {
         INNER JOIN profissoes p on p.id = cp.id_profissao
         WHERE p.id IN (
             SELECT cop.id_profissao FROM concurso_profissao cop
-            WHERE cop.id_concurso = $1
-            UNION
-            SELECT cap.id_profissao FROM candidato_profissao cap
-            WHERE cap.id_candidato = c.id)
-        `, [concursoId]
+            WHERE cop.id_concurso =
+                (SELECT c.id FROM concursos c WHERE c.codigo = $1 LIMIT 1))
+        `, [codigo]
     )
 
     await client.end()

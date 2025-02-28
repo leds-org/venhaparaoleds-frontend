@@ -42,21 +42,8 @@ export const listConcursos = async () => {
 }
 
 export const getConcursosByCpf = async (cpf) => {
-    let client = new Client()
-    await client.connect()
 
-    const candidatoQueryRes = await client.query(
-        "SELECT c.id FROM candidatos c WHERE c.cpf = $1",
-        [stripCpf(cpf)]
-    )
-    await client.end()
-    const candidatoExists = candidatoQueryRes.rowCount > 0
-    if (!candidatoExists) {
-        return []
-    }
-    const candidatoId = candidatoQueryRes.rows[0].id
-
-    client = new Client()
+    const client = new Client()
     await client.connect()
 
     const queryRes = await client.query(
@@ -70,17 +57,14 @@ export const getConcursosByCpf = async (cpf) => {
         JOIN concurso_profissao cp on cp.id_concurso = c.id
         INNER JOIN profissoes p on p.id = cp.id_profissao
         WHERE p.id IN (
-            SELECT cop.id_profissao FROM concurso_profissao cop
-            WHERE cop.id_concurso = c.id
-            UNION
             SELECT cap.id_profissao FROM candidato_profissao cap
-            WHERE cap.id_candidato = $1)
+            WHERE cap.id_candidato =
+                (SELECT c.id FROM candidatos c WHERE c.cpf = $1 LIMIT 1))
         `,
-        [candidatoId]
+        [stripCpf(cpf)]
     )
 
     await client.end()
-
     const concursos = groupByProfissoes(queryRes.rows)
 
     return concursos
