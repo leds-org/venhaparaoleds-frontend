@@ -230,7 +230,6 @@ const app = useAppStore()
 ### Fornecendo o frontend
 O programa criado com Vue é distribuido pelo servidor HTTP nginx por meio de uma *container* criado a partir da imagem oficial do programa na versão 1.27.4. O nginx é um programa rápido e moderno, apropriado para aplicações com muitos acessos simultâneos.
 
-
 # Executando a aplicação
 Para executar corretamente a aplicação, certifique-se de estar em um ambiente Linux (nativo, WSL ou outro tipo de virtualização) com os seguintes programas nas respectivas versões ou versões próximas:
 
