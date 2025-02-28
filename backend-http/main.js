@@ -1,19 +1,18 @@
 import express from "express"
 import bodyParser from "body-parser"
 import registerRoutes from "./routes.js"
-import cors from "cors"
 
 
 
 const app = express()
 app.use(bodyParser.json())
-// nao consegui resolver. assim funcionou
-app.use(cors({ origin: [
-    "http://localhost",
-    "http://localhost:3000",
-    "http://10.7.0.4",
-    "http://10.7.0.1"
-] }))
+// por algum motivo a biblioteca 'cors' nao funcionou de jeito nenhum
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost")
+    res.setHeader("Access-Control-Allow-Methods", "*")
+    res.setHeader("Access-Control-Allow-Headers", "*")
+    next()
+})
 const port = 8080
 
 registerRoutes(app)
