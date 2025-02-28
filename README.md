@@ -266,3 +266,9 @@ Para parar a aplicação, execute o comando:
 ```sh
 $ sudo docker compose down
 ```
+
+# Diferenciais implementados
+- Criar um serviço com o problema
+- Utilizar banco de dados
+- Implementar o padrão de programação da tecnologia escolhida
+- Implementar usando Docker
