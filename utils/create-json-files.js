@@ -1,47 +1,94 @@
 import { readFile, writeFile } from 'node:fs/promises'
 
-// deixar separado por enquanto porque vou utilizar em outro script
-const csvlikeToArray = async (txtFilename, map) => {
-    let data = await readFile(txtFilename, { encoding: "utf8" })
-    data = data.split("\n")
-        .slice(0, -1) // ultima linha em branco
-        .map(map)
-    return data
+
+
+const stripCpf = (cpf) =>
+      cpf.replaceAll(".", "").replace("-", "")
+
+const datePTBRtoIntl = (date) => {
+    const els = date.split("/")
+    return els[2] + "/" + els[1] + "/" + els[0]
 }
 
-[
-    {
-        txtInput: "../concursos.txt",
-        jsonOutput: "../frontend-web/src/services/concursos.json",
-        jsonOutput: "../backend-http/utils/concursos.json",
-        map: (row) => {
+const dateIntlToPTBR = (date) =>
+    (new Date(date)).toLocaleDateString("pt-BR")
+
+const formatCpf = (cpf) => {
+    return cpf.slice(0, 3) + "." + cpf.slice(3, 6) + "." + cpf.slice(6, 9) +
+        "-" + cpf.slice(9)
+}
+
+const geraArrays = async () => {
+    const profissoes = new Set()
+    const concProf = []
+
+    const concursos = (await readFile("../concursos.txt", { encoding: "utf8" }))
+        .split("\n")
+        .slice(0, -1) // ultima linha em branco
+        .map((row) => {
             const regex = /([A-Z]+)\ (\d{1,2}\/\d{4})\ (\d+)\ \[(.+)\]/
-            let match = row.match(regex)
-            const concurso = {
-                orgao: match[1],
-                edital: match[2],
-                codigo: match[3],
-                profissoes: match[4].split(", ")
-            }
+            const match = row.match(regex)
+            const edital = match[2].split("/")
+            match[4].split(", ").forEach((prof) => {
+                profissoes.add(prof)
+                concProf.push([match[3], prof])
+            })
+            const concurso = [
+                match[1],
+                Number(edital[0]),
+                Number(edital[1]),
+                match[3],
+            ]
             return concurso
-        }
-    },
-    {
-        txtInput: "../candidatos.txt",
-        jsonOutput: "../backend-http/utils/candidatos.json",
-        map: (row) => {
+        })
+
+    const candProf = []
+    // jsonOutput: "../backend-http/utils/candidatos.json",
+    const candidatos = (await readFile("../candidatos.txt", { encoding: "utf8" }))
+        .split("\n")
+        .slice(0, -1) // ultima linha em branco
+        .map((row) => {
             const regex = /([.\D]+)\ (\d{2}\/\d{2}\/\d{4})\ (\d{3}\.\d{3}\.\d{3}\-\d{2})\ \[(.+)\]/
-            let match = row.match(regex)
-            const candidato = {
-                nome: match[1],
-                dataNascimento: match[2],
-                cpf: match[3],
-                profissoes: match[4].split(", ")
-            }
+            const match = row.match(regex)
+            const cpf = stripCpf(match[3])
+            const candidato = [
+                match[1],
+                datePTBRtoIntl(match[2]),
+                cpf,
+            ]
+            match[4].split(", ").forEach((prof) => {
+                profissoes.add(prof)
+                candProf.push([cpf, prof])
+            })
             return candidato
-        }
-    }
-].forEach(async ({txtInput, jsonOutput, map}) => {
-    const data = await csvlikeToArray(txtInput, map)
-    writeFile(jsonOutput, JSON.stringify(data))
+        })
+    return [
+        {
+            outputFile: "../backend-http/utils/concursos.json",
+            data: concursos
+        },
+        {
+            outputFile: "../backend-http/utils/candidatos.json",
+            data: candidatos
+        },
+        {
+            outputFile: "../backend-http/utils/profissoes.json",
+            data: Array.from(profissoes).map((p) => [p])
+        },
+        {
+            outputFile: "../backend-http/utils/concurso-profissao.json",
+            data: concProf
+        },
+        {
+            outputFile: "../backend-http/utils/candidato-profissao.json",
+            data: candProf
+        },
+    ]
+}
+
+(await geraArrays()).forEach(async ({ outputFile, data }) => {
+    writeFile(
+        outputFile,
+        JSON.stringify(data)
+    )
 })
