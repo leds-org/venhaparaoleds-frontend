@@ -4,8 +4,6 @@ services:
   backend-db:
     image: backend-db
     hostname: backend-db
-    # ports:
-      # - '5432:5432'
     networks:
       - private
     environment:
@@ -27,7 +25,6 @@ services:
     depends_on:
       - backend-db
     restart: on-failure
-    # command: npm run dev
 
   frontend:
     image: frontend
