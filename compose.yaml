@@ -1,0 +1,40 @@
+name: concoursera
+
+services:
+  backend-db:
+    image: backend-db
+    hostname: backend-db
+    networks:
+      - private
+    environment:
+      - POSTGRES_PASSWORD=5040
+
+  backend:
+    image: backend
+    ports:
+      - '8080:8080'
+    hostname: backend
+    networks:
+      - public
+      - private
+    environment:
+      - PGUSER=postgres
+      - PGPASSWORD=5040
+      - PGHOST=backend-db
+      - PGPORT=5432
+    depends_on:
+      - backend-db
+    restart: on-failure
+
+  frontend:
+    image: frontend
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
+    networks:
+      - public
+  
+networks:
+  public:
+  private:
