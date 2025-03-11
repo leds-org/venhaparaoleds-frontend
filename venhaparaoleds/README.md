@@ -123,7 +123,7 @@ bun start
 
 # 5. Passos para Abrir Exemplo em Produção
 
-Basta acessar o link: https://venhaparaoleds-frontend.vercel.app/(https://venhaparaoleds-frontend.vercel.app/)
+Basta acessar o link: https://venhaparaoleds-frontend.vercel.app
 
 # 6. Diferenciais Implementados
 
