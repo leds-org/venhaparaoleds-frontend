@@ -1,7 +1,6 @@
 import Link from 'next/link'
 
 import Logo from '@/ui/components/general/logo'
-import NavLinks from '@/ui/components/general/nav-links'
 
 export default function SideNav() {
   return (
@@ -16,7 +15,6 @@ export default function SideNav() {
           </div>
         </Link>
         <section className="fixed left-0 bottom-0 flex flex-row grow items-center justify-between w-full h-14 px-5 space-x-2 bg-light z-10 lg:static lg:flex-col lg:px-0 lg:space-x-0 lg:space-y-2 lg:bg-transparent">
-          {/* <NavLinks /> */}
           <div className="hidden w-full h-auto grow rounded-md lg:block"></div>
         </section>
       </div>

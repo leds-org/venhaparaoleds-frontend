@@ -8,7 +8,6 @@ import { usePathname } from 'next/navigation'
 import {
   BookBookmark,
   House,
-  Monitor,
   User,
 } from '@phosphor-icons/react'
 

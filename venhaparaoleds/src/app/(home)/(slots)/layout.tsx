@@ -14,7 +14,7 @@ export default async function HomeLayout({
   return (
     <div className="flex flex-col">
       <TabNavigationPanel
-        tabs={[<span>Home</span>, <span>Concursos</span>, <span>Candidatos</span>]}
+        tabs={[<span key='home'>Home</span>, <span key='concursos'>Concursos</span>, <span key='candidatos'>Candidatos</span>]}
         hrefs={['/', '/concursos', '/candidatos']}
       />
       <div className="flex flex-col h-full w-full rounded-lg border-2 border-black p-4">

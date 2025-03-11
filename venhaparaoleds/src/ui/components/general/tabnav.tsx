@@ -1,9 +1,8 @@
 'use client'
 
-import { tv } from "tailwind-variants"
 import Link from "next/link"
 
-import { useState } from "react"
+import { tv } from "tailwind-variants"
 import { Tab, TabList } from "react-tabs"
 import { usePathname } from "next/navigation"
 

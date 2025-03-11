@@ -2,10 +2,7 @@
 
 import AsyncSelect from "react-select/async"
 
-import { use } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-
-import { useContentPromise } from "@/app/(home)/(slots)/context"
 
 
 type Option = {
