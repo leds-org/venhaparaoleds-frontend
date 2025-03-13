@@ -1,0 +1,32 @@
+{
+  "name": "trilha-front-end-api",
+  "version": "1.0.0",
+  "description": "desafio trilha front-end com Vue.js Leds",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "apidoc": "apidoc -i routes/ -o public/apidoc"
+  },
+  "apidoc": {
+    "name": "Documentação Trilha Front-end Vue.js Leds",
+    "template": {
+      "forceLanguage": "pt_br"
+    }
+  },
+  "author": "Caio Roberto",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "compression": "^1.8.0",
+    "consign": "^0.1.6",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0",
+    "sequelize": "^6.37.6",
+    "sqlite3": "^5.1.7",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "apidoc": "^1.2.0"
+  }
+}
