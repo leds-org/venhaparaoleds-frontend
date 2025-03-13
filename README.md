@@ -1,3 +1,9 @@
+# Documentação
+
+A documentação do projeto está presente em um README na pasta `venhaparaoleds/`
+
+---
+
 # Desafio Frontend - LEDS
 *Bem-vindo!* 👋
 
